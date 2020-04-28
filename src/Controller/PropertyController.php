@@ -1,4 +1,6 @@
-<?php namespace App\Controller;
+<?php
+
+namespace App\Controller;
 
 use App\Entity\Property;
 use App\Repository\PropertyRepository;
@@ -11,29 +13,31 @@ class PropertyController extends AbstractController
     /**
      * @Route("/biens", name="property.index")
      */
-    public function index( PropertyRepository $repository)
+    public function index()
     {
-        
-        $property = $repository->findAllVisible();
 
-       
-        return $this->render('pages/property.html.twig', [
+        return $this->render('property/index.html.twig', [
             'current_menu' => 'properties'
         ]);
     }
 
     /**
-     * @Route("/biens/{slug}-id", name="property.index", requirements)
+     * @Route("/biens/{slug}-{id}", name="property.show", requirements={"slug":"[a-z0-9\-]*"})
      */
-    public function show( PropertyRepository $repository)
+    public function show(PropertyRepository $repository, $slug,$id)
     {
-        
-        $property = $repository->findAllVisible();
+        $property = $repository->find($id);
 
-       
-        return $this->render('pages/property.html.twig', [
+        if ($property->getSlug() !== $slug){
+            return $this->redirectToRoute('property.show', [
+                'id'=>$property->getId(),
+                'slug'=>$property->getSlug()
+            ],301);
+        }
+
+        return $this->render('property/show.html.twig', [
+            'property'=> $property,
             'current_menu' => 'properties'
         ]);
     }
-}
 }
