@@ -31,13 +31,14 @@ class AdminPropertyController extends AbstractController
     public function new(Request $request, EntityManagerInterface $manager)
     {
 
-       $property = new Property();
-       $form = $this->createForm(PropertyType::class, $property);
+        $property = new Property();
+        $form = $this->createForm(PropertyType::class, $property);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($property);
             $manager->flush();
+            $this->addFlash('success', 'Bien ajouté avec succés');
             return $this->redirectToRoute('admin.property.index');
         }
 
@@ -45,10 +46,9 @@ class AdminPropertyController extends AbstractController
             'property' => $property,
             'form' => $form->createView()
         ]);
-
     }
 
-       /**
+    /**
      * @Route("/admin/property/{id}", name="admin.property.edit", methods="GET|POST")
      */
     public function edit(Property $property, Request $request, EntityManagerInterface $manager)
@@ -58,29 +58,32 @@ class AdminPropertyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             $manager->flush();
+            $this->addFlash('success', 'Bien modifié avec succés');
             return $this->redirectToRoute('admin.property.index');
         }
 
-    
+
         return $this->render('admin/property/edit.html.twig', [
             'property' => $property,
             'form' => $form->createView()
         ]);
     }
 
-     /**
+    /**
      * @Route("/admin/property/{id}", name="admin.property.delete", methods="DELETE")
      */
-    public function delete(Property $property, EntityManagerInterface $manager)
-    {     
+    public function delete(Property $property, EntityManagerInterface $manager, Request $request)
+    {
+        if ($this->isCsrfTokenValid('delete', $property->getId(), $request->get('_token'))) {
             $manager->remove($property);
             $manager->flush();
+            $this->addFlash('success', 'Bien supprimé avec succés');
 
-            return $this->redirectToRoute('admin.property.index');
+        }
 
+
+        return $this->redirectToRoute('admin.property.index');
     }
-
-   
 }
