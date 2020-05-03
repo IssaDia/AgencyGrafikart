@@ -4,11 +4,35 @@
 {% endblock %}
 
 {% block body %}
+<div class='jumbotron'>
+	<div class='container'>
+	 	{{ form_start(form)}}
+		 <div class='form-row'>
+		 	<div class='col'>
+			 {{ form_row(form.minSurface)}}
+			</div>
+			<div class='col'>
+			 {{ form_row(form.maxPrice)}}
+			</div>
+			<div class='col'>
+			<button class='btn btn-primary'>Rechercher</button>
+			</div>
+		</div>
+		 {{ form_end(form)}}
 	<div class='container mt-4'>
 		<h1>Biens!!!</h1>
-		<p>Hac ex causa conlaticia stipe Valerius humatur ille Publicola et subsidiis amicorum mariti inops cum liberis uxor alitur Reguli et dotatur ex aerario filia Scipionis, cum nobilitas florem adultae virginis diuturnum absentia pauperis erubesceret patris.
+		<div class='row'>
+			{% for property in properties %}
+				<div class='col-md-4'>
+					{% include "property/property.html.twig" %}
+				</div>
+			{% endfor %}
+		</div>
 
-		</p>
+		<div class="navigation">
+			{{ knp_pagination_render(properties) }}
+		</div>
+
 	</div>
 
 
