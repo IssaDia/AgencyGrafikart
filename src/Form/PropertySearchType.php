@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Option;
 use App\Entity\PropertySearch;
 use Doctrine\DBAL\Types\IntegerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType as TypeIntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -28,6 +30,14 @@ class PropertySearchType extends AbstractType
                 'attr' => [
                     'placeholder' => ' Surface minimale'
                 ]
+            ])
+
+            ->add('options', EntityType::class, [
+                'required' => false,
+                'label' => false,
+                'class' => Option::class,
+                'choice_label'=> 'name',
+                'multiple' => true
             ]);
     }
 
@@ -35,8 +45,8 @@ class PropertySearchType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => PropertySearch::class,
-            'method'=>'get',
-            'csrf_protection'=>false
+            'method' => 'get',
+            'csrf_protection' => false
         ]);
     }
 
